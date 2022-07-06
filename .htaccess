@@ -1,0 +1,8 @@
+# SetEnv ENV_HTACCESS_READING true
+
+RewriteEngine On
+RewriteBase /
+
+# Route Home
+RewriteCond %{REQUEST_URI} !\.(?:css|scss|js|jpeg|jpg|raw)$
+RewriteRule ^\/?([a-zA-Z0-9%\-_]+)?\/?([a-zA-Z0-9%\-_]+)?\/?([a-zA-Z0-9%\-_]+)?\/?([a-zA-Z0-9%\-_]+)?\/?([a-zA-Z0-9%\-_]+)?\/?$ index.php/?level1=$1&level2=$2&level3=$3&level4=$4&level5=$5 [QSA,L]
