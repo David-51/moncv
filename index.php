@@ -2,6 +2,7 @@
 
 use Assets\Autoloader;
 use Assets\CleanArray;
+use Assets\Logger;
 use Assets\PathLoader;
 
 require './Front/Assets/PathLoaderAssets.php';
@@ -14,6 +15,7 @@ CleanArray::Clean($_GET);
 // router
 switch ($_GET) {
     case 'blog':
+        Logger::setMessage('Blog');
         break;
     case 'cv':
         break;
