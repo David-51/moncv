@@ -5,6 +5,8 @@ namespace Assets;
 class PathLoader
 {
     CONST PATH = [
+        './',
+        'Front',
         'Front/Assets',
         'Front/Controller',
         'Front/public/views'        
@@ -15,6 +17,6 @@ class PathLoader
             set_include_path(
                 get_include_path().PATH_SEPARATOR.$value
             );
-        }
+        }        
     }    
 }
