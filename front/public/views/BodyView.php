@@ -5,7 +5,7 @@
             <H1 class="text-center size-14">Je crée des sites simples et intuitifs pour attirer plus de clients</H1>
         </div>
         <div class="row profile m-auto">            
-            <img class="profile-picture m-0 p-0" src="./public/images/profile.png" alt="" srcset="">                        
+            <img class="profile-picture m-0 p-0" src="./Front/public/images/profile.png" alt="" srcset="">                        
         </div>
         <div class="row col m-auto">
             <p class="text-center mt-2 mb-0 name">

@@ -27,5 +27,5 @@ switch ($_GET['level1']) {
     case 'admin':
         break;
     default:
-        require 'HomeController.php';
+        require 'HomeController.php';        
 }
