@@ -9,7 +9,8 @@ class PathLoader
         'Front',
         'Front/Assets',
         'Front/Controller',
-        'Front/public/views'        
+        'Front/public/views',
+        'vendor'
     ];
 
     static function registerPath(){
