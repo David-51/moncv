@@ -5,10 +5,13 @@ This is my public repositories of my Online CV
 
 This not a real CV but a part of my skills so you can evaluate them.
 
-This project is not finished yet
+This project is not finished yet.
 
 So you will find a tiny blog, an admin interface to create articles.
 
+## Good to know
+This repository contain Phpdotenv to read .env files.
+You can find the original here : https://github.com/vlucas/phpdotenv
 ## Contact me
 you can contact me in Linkedin at :
 

@@ -27,5 +27,6 @@ switch ($_GET['level1']) {
     case 'admin':
         break;
     default:
+        Logger::setMessage('connect to Home');
         require 'HomeController.php';        
 }
