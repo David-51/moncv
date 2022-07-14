@@ -6,8 +6,8 @@ use Assets\Logger;
 use Assets\PathLoader;
 use Dotenv\Dotenv;
 
-require './Front/Assets/PathLoaderAssets.php';
-require './Front/Assets/Autoloader.php';
+require './App/Assets/PathLoaderAssets.php';
+require './App/Assets/Autoloader.php';
 
 PathLoader::registerPath();
 Autoloader::register();
