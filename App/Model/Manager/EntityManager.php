@@ -2,18 +2,14 @@
 namespace App\Model\Manager;
 
 use App\Assets\Logger;
-use App\Model\Entity\Entities;
+
 use App\Model\Manager\Database;
 
 class Entity
 {    
-    public Entities $entity;
 
-    public function __construct(Entities $entity = null)    
-    {                       
-        if(isset($entity)){
-            $this->entity = $entity;            
-        }
+    public function __construct()    
+    {                               
         try{
             $this->db = Database::getConnection();                
         }
@@ -23,23 +19,70 @@ class Entity
             die;
         }        
     }
+    // Setter and getter 
+    public function setId($id) :self{
+        $this->id = $id;
+        return $this;
+    }
+    public function getId() :string {
+        return $this->id;
+    }
+
     /**
-     * @return Entities||bool Entity matching with entity from database or false of error
+     * @return string name of the current entity
+     */
+    public function getEntityName() :string{
+        $class = get_class($this);
+        return substr($class, strrpos($class, '\\') + 1);
+    }
+    
+    /**
+     * convert IP Adress in hexadecimal
+     * @return string Ip adress in hexadecimal
+     */
+    private function ipToHex(){
+        $remote = $_SERVER['REMOTE_ADDR'];
+        $explode_remote = explode('.', $remote);
+        
+        for($i = 0; $i<4 ; $i++){            
+            if(!isset($explode_remote[$i])){
+                $explode_remote[$i] = rand(0,255);
+            }
+            if(intval($explode_remote[$i])<16){
+                $ip[] = '0'.dechex(intval($explode_remote[$i]));
+            }
+            else{
+                $ip[] = dechex(intval($explode_remote[$i]));
+            }
+        }                    
+        return implode('', $ip);
+    }
+    /**
+     * first digit are based on the current timestamp in micro second, and the last digit are the request IP.
+     * all is converted on base 64 code
+     * @return string UUID
+     */
+    public function setUniqId(){        
+        $uniqid = uniqid(true);    
+        return substr($uniqid, 0, 8). '-' . substr($uniqid, 8, 4) . '-' . substr($uniqid, 12, 2). bin2hex(random_bytes(1)) . '-' . bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2)) . $this->ipToHex();
+    }
+    /**
+     * @return Entity||bool Entity matching with entity from database or false of error
      * if the Id of object is set, return the single Object from database
      */
     public function getEntity(){           
-        $entity_name = strtolower($this->entity->getEntityName());
+        $entity_name = strtolower($this->getEntityName());
                         
-        $entity_id = $this->entity->id;
+        $entity_id = $this->getId();
         $query = "SELECT * FROM $entity_name WHERE id=\"$entity_id\"";
 
         try {
             $sth = $this->db->prepare($query);
-            $sth->setFetchMode(\PDO::FETCH_INTO, $this->entity);        
+            $sth->setFetchMode(\PDO::FETCH_INTO, $this);        
             $sth->execute();
              
             $response = $sth->fetch();
-            Logger::setMessage('get Entity '.$entity_name. ' '.$this->entity->getId());
+            Logger::setMessage('get Entity '.$entity_name. ' '.$this->getId());
             return $response;
         }
         catch(\PDOException $e){
@@ -53,7 +96,7 @@ class Entity
      * return all response with the samed entity
      */
     public function getEntities($cond = null){           
-        $entity_name = strtolower($this->entity->getEntityName());
+        $entity_name = strtolower($this->getEntityName());
                                     
          if($cond){
              $query = "SELECT * FROM $entity_name WHERE $cond[0]=\"$cond[1]\"";
@@ -64,7 +107,7 @@ class Entity
 
         try {
             $sth = $this->db->prepare($query);
-            $sth->setFetchMode(\PDO::FETCH_CLASS, get_class($this->entity));        
+            $sth->setFetchMode(\PDO::FETCH_CLASS, get_class($this));        
             $sth->execute();
              
             $response = $sth->fetchAll();
@@ -82,11 +125,11 @@ class Entity
      * @param bool $bool true = FETCH_CLASS whereas FETCH
      * @return array|bool|Entities, array if Fetch, Entities if @param $bool at true and false if error
      */
-    public function getWithQuery(string $query, $bool = true) :array|Entities|bool{        
+    public function getWithQuery(string $query, $bool = true) :array|Entity|bool{        
         try{
             $sth = $this->db->prepare($query);
             if($bool === true){
-                $sth->setFetchMode(\PDO::FETCH_CLASS, strtolower(get_class($this->entity)));
+                $sth->setFetchMode(\PDO::FETCH_CLASS, strtolower(get_class($this)));
             }else{
                 $sth->setFetchMode(\PDO::FETCH_ASSOC);
             }
@@ -111,7 +154,7 @@ class Entity
      */
     public function updateEntity(string $where, string $cond, array $rows) {
                 
-        $entity_name = strtolower($this->entity->getEntityName());
+        $entity_name = strtolower($this->getEntityName());
 
         $rows_keys = array_keys($rows);
         $set_rows_keys = implode(', ', array_map(function($value){
@@ -136,15 +179,15 @@ class Entity
     }
 
     /**
-     * @return Entities||bool Entity if persist is done and false if an error occured
+     * @return Entity||bool Entity if persist is done and false if an error occured
      * 
      */
-    public function persistEntity() :Entities|bool
+    public function persistEntity() :Entity|bool
     {
         
-        $data_keys = array_keys(get_class_vars(get_class($this->entity)));              
+        $data_keys = array_keys(get_class_vars(get_class($this)));              
         foreach($data_keys as $key=>$value){
-            if(!isset($this->entity->$value)){
+            if(!isset($this->$value)){
                 unset($data_keys[$key]);
             }            
         }
@@ -155,7 +198,7 @@ class Entity
             return ':'.$value;
         }, $data_keys));                                        
 
-        $entity_name = strtolower($this->entity->getEntityName());
+        $entity_name = strtolower($this->getEntityName());
 
         $query = "INSERT INTO $entity_name($params) VALUES($valueToBind)";
         try{
@@ -193,37 +236,5 @@ class Entity
             Logger::setMessage($e->getMessage());
             return false;
         }        
-    }
-
-    /**
-     * @param Entities $child Class of child you want to fetch
-     * @param bool $bool, if set to true, the childs is the parent
-     * @return array||bool array of childs or false if error
-     */
-    public function getChilds(Entities $child, bool $bool = false) :array|bool{                     
-        
-        if($bool){
-            $where = 'id';                            
-            $the_id = strtolower(substr($child->getEntityName() , 0, -1).'_id');
-            $entity_id = $this->entity->$the_id;
-        }
-        else{
-            $where = strtolower(substr($this->entity->getEntityName() , 0, -1)).'_id';                                        
-            $entity_id = $this->entity->id;        
-        }
-
-        $entity_name = strtolower($child->getEntityName());
-        $query = "SELECT * FROM $entity_name WHERE $where = \"$entity_id\"";
-        try{
-            $sth = $this->db->prepare($query);
-            $sth->execute();
-    
-            $sth->setFetchMode(\PDO::FETCH_CLASS, strtolower(get_class($child)));
-            $response = $sth->fetchAll();              
-            return $response;
-        }                      
-        catch(\PDOException $e){
-            return false;
-        }
     }
 }

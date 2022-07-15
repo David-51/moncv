@@ -2,7 +2,9 @@
 
 namespace App\Model\Entity;
 
-class Article extends Entities
+use App\Model\Manager\Entity;
+
+class Article extends Entity
 {
     private string $id;
     private string $title;
@@ -17,5 +19,14 @@ class Article extends Entities
     }
     public function setContent(string $content) :string {
         return $this->content = $content;
+    }
+    public function getContetnt () :string {
+        return $this->content;
+    }
+    public function setPictureId(string $picture_id) :string {
+        return $this->picture_id = $picture_id;
+    }
+    public function getPictureId() :string {
+        return $this->picture_id;
     }
 }
