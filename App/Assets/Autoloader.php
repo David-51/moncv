@@ -1,6 +1,6 @@
 <?php
 
-namespace Assets;
+namespace App\Assets;
 
 class Autoloader
 {

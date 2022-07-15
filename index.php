@@ -1,9 +1,9 @@
 <?php
 
-use Assets\Autoloader;
-use Assets\CleanArray;
-use Assets\Logger;
-use Assets\PathLoader;
+use App\Assets\Autoloader;
+use App\Assets\CleanArray;
+use App\Assets\Logger;
+use App\Assets\PathLoader;
 use Dotenv\Dotenv;
 
 require './App/Assets/PathLoaderAssets.php';
@@ -13,6 +13,7 @@ PathLoader::registerPath();
 Autoloader::register();
 CleanArray::Clean($_GET);
 
+// Load phpdotenv to read .env
 require 'vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();

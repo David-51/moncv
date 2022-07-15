@@ -1,6 +1,6 @@
 <?php
 
-namespace Assets;
+namespace App\Assets;
 
 /**
  * this class is made to clean array from injection XSS. remove php and html balise by using strip_tags and trim.
