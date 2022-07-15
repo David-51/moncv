@@ -7,17 +7,20 @@ use App\Model\Manager\Entity;
 class Entities
 {    
 
-    public function setId($id){
+    public function setId($id) :self{
         $this->id = $id;
         return $this;
-    }    
+    }
+    public function getId() :string {
+        return $this->id;
+    }
 
-    public function getEntityName(){
+    public function getEntityName() :string{
         $class = get_class($this);
         return substr($class, strrpos($class, '\\') + 1);
     }
 
-    public function setEntityManager(){
+    public function setEntityManager() :Entity{
         return new Entity($this);        
     }
     
@@ -47,9 +50,7 @@ class Entities
         $uniqid = uniqid(true);    
         return substr($uniqid, 0, 8). '-' . substr($uniqid, 8, 4) . '-' . substr($uniqid, 12, 2). bin2hex(random_bytes(1)) . '-' . bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2)) . $this->ipToHex();
     }
-    public function getId(){
-        return $this->id;
-    }
+    
     /**
      * @return bool true if deleted and false if error
      */

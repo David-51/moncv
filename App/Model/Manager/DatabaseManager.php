@@ -5,7 +5,7 @@ use App\Assets\Logger;
 
 class Database
 {
-    public static $pdo = null;
+    private static $pdo = null;
     
     private static function connect() :\PDO
     {
