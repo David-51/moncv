@@ -8,13 +8,13 @@ CREATE DATABASE IF NOT EXISTS mycv CHARACTER SET = utf8mb4;
 USE mycv;
 
 \! echo "\033[33m*** Create Table 'blog' ***\033[m";
-CREATE Table IF NOT EXISTS blog 
+CREATE Table IF NOT EXISTS articles 
 (
     id VARCHAR(36) NOT NULL UNIQUE PRIMARY KEY DEFAULT (UUID()),
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    picture_id VARCHAR(36),
+    picture_id VARCHAR(36) NOT NULL DEFAULT 'test',
     FOREIGN KEY (picture_id) REFERENCES pictures(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
