@@ -6,10 +6,16 @@ class PathLoader
 {
     CONST PATH = [
         './',
+        'App',
         'Front',
-        'Front/Assets',
         'Front/Controller',
         'Front/public/views',
+        'Assets/',
+        'Controller/',
+        'App/Controller/',
+        'App/Controller/Articles',  
+        'App/Model/Entities',
+        'App/Model/Manager',     
         'vendor'
     ];
 

@@ -4,14 +4,15 @@ namespace App\Model\Manager;
 use App\Assets\Logger;
 
 use App\Model\Manager\Database;
+use ReflectionClass;
 
 class Entity
 {    
-
-    public function __construct()    
+    private \PDO $db;
+    private function connect()    
     {                               
         try{
-            $this->db = Database::getConnection();                
+            $this->db = Database::getConnection();
         }
         catch(\PDOException $e){
             Logger::setMessage('Erreur de connexion à la BDD, code: BD-0000:'.$e);
@@ -62,9 +63,12 @@ class Entity
      * all is converted on base 64 code
      * @return string UUID
      */
-    public function setUniqId(){        
+    public function getUniqId(){        
         $uniqid = uniqid(true);    
         return substr($uniqid, 0, 8). '-' . substr($uniqid, 8, 4) . '-' . substr($uniqid, 12, 2). bin2hex(random_bytes(1)) . '-' . bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2)) . $this->ipToHex();
+    }
+    public function setUniqId(){
+        return $this->setId($this->getUniqId());
     }
     /**
      * @return Entity||bool Entity matching with entity from database or false of error
@@ -98,13 +102,13 @@ class Entity
     public function getEntities($cond = null){           
         $entity_name = strtolower($this->getEntityName());
                                     
-         if($cond){
-             $query = "SELECT * FROM $entity_name WHERE $cond[0]=\"$cond[1]\"";
+        if($cond){
+            $query = "SELECT * FROM $entity_name WHERE $cond[0]=\"$cond[1]\"";
 
-         }else{
-             $query = "SELECT * FROM $entity_name";
-         }
-
+        }else{
+            $query = "SELECT * FROM $entity_name";
+        }
+        $this->connect();
         try {
             $sth = $this->db->prepare($query);
             $sth->setFetchMode(\PDO::FETCH_CLASS, get_class($this));        
@@ -125,7 +129,8 @@ class Entity
      * @param bool $bool true = FETCH_CLASS whereas FETCH
      * @return array|bool|Entities, array if Fetch, Entities if @param $bool at true and false if error
      */
-    public function getWithQuery(string $query, $bool = true) :array|Entity|bool{        
+    public function getWithQuery(string $query, $bool = true) :array|Entity|bool{    
+        $this->connect();    
         try{
             $sth = $this->db->prepare($query);
             if($bool === true){
@@ -153,6 +158,7 @@ class Entity
      * @param array $rows = [key => value, ....];
      */
     public function updateEntity(string $where, string $cond, array $rows) {
+        $this->connect();
                 
         $entity_name = strtolower($this->getEntityName());
 
@@ -177,34 +183,48 @@ class Entity
             return false;
         }
     }
-
+    /**
+     * @return array of Variables of the current class
+     */
+    private function getVars() :array {
+        $reflect = new ReflectionClass($this);
+        $props = $reflect->getProperties();
+        foreach($props as $objectProps){
+            $vars[] = $objectProps->name;
+        }        
+        return $vars;
+    }
     /**
      * @return Entity||bool Entity if persist is done and false if an error occured
      * 
      */
     public function persistEntity() :Entity|bool
-    {
-        
-        $data_keys = array_keys(get_class_vars(get_class($this)));              
+    {        
+       
+        $data_keys = $this->getVars();                          
+        // delete keys are unset, that prevent error when bindValue
         foreach($data_keys as $key=>$value){
             if(!isset($this->$value)){
                 unset($data_keys[$key]);
             }            
-        }
+        }        
 
         $params = implode(", ", $data_keys);
-
+        
         $valueToBind = implode(", ", array_map(function($value){
             return ':'.$value;
         }, $data_keys));                                        
-
+        
         $entity_name = strtolower($this->getEntityName());
-
+        
         $query = "INSERT INTO $entity_name($params) VALUES($valueToBind)";
+        $this->connect();        
         try{
             $sth = $this->db->prepare($query);                                          
-            foreach($this->entity as $key => $value){
-                $sth->bindValue(':'.$key, $value);
+            foreach($this as $key => $value){
+                if(!is_object($value)){
+                    $sth->bindValue(':'.$key, $value);
+                }
             }            
             $sth->execute();
             http_response_code(201);                                                 
@@ -214,7 +234,7 @@ class Entity
             return false;
         }           
         Logger::setMessage('Entity persisted');
-        return $this->entity;
+        return $this;
     }
     /**
      * Delete the current Entity 
@@ -226,6 +246,7 @@ class Entity
     public function deleteEntity(string $entity, string $where, string $condition){              
         
         $query = "DELETE FROM $entity WHERE $where=\"$condition\"";
+        $this->connect();
         try{
             $sth = $this->db->prepare($query);
             $sth->execute();

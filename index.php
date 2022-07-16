@@ -11,7 +11,7 @@ require './App/Assets/Autoloader.php';
 
 PathLoader::registerPath();
 Autoloader::register();
-CleanArray::Clean($_GET);
+$_GET = CleanArray::Clean($_GET);
 
 // Load phpdotenv to read .env
 require 'vendor/autoload.php';
@@ -20,14 +20,18 @@ $dotenv->load();
 
 // router
 switch ($_GET['level1']) {
-    case 'blog':        
+    case 'blog':
         Logger::setMessage('Blog');
+        require 'BlogController.php';
         break;
     case 'cv':
         break;
     case 'admin':
         break;
+    case 'app':
+        require 'AppController.php';
+        break;
     default:
-        Logger::setMessage('connect to Home');
+        Logger::setMessage('connect to Home');        
         require 'HomeController.php';        
 }
