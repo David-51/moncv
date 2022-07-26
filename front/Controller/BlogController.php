@@ -13,5 +13,7 @@ $articles = new Articles;
 $results = $articles->getArticles($page, 10);
 
 $blog = new Template;
+$blog->setHeader('Header', ['link' => '/']);
 $blog->setBody('Blog', $results);
+$blog->setFooter('Footer');
 echo $blog->getContent('Template');

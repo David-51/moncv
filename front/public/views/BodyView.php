@@ -26,18 +26,45 @@
     </div>
 
     <div class="modal fade" id="contactform" tabindex="-1" aria-labelledby="formcontact" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="formcontaact">Parlez moi de votre projet ...</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            insérer formulaire ...
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>            
-        </div>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formcontaact">Votre projet :</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form">                                        
+                        <div class="row">                        
+                            <div class="col-12 col-md-6 mb-1">
+                                <label for="lastname" class="form-label">Votre Nom</label>
+                                <input type="text" name="lastname" id="lastname" class="form-control" aria-describedby="lastname">                        
+                            </div>
+                            <div class="col-12 col-md-6 mb-1">
+                                <label for="firstname" class="form-label">Votre Prénom</label>
+                                <input type="text" name="firstname" id="firstname" class="form-control" aria-describedby="firstname">                        
+                            </div>
+                            <div class="mb-1 adress">
+                                <label for="adress">Adresse :</label>
+                                <input type="adress" name="adress" id="adress" class="form-control">                                           
+                            </div>
+                            <div class="mb-1">
+                                <label for="email" class="form-label">Votre E-mail</label>
+                                <input type="email" name="email" id="email" class="form-control" aria-describedby="email">                        
+                            </div>                    
+                            <div class="mb-1">
+                                <label for="project" class="form-label">Décrivez votre projet :</label>
+                                <textarea type="text" name="project" id="project" class="form-control" aria-describedby="project">Bonjour, </textarea>                      
+                            </div>
+                            <div class="mb-1">
+                                <button type="submit" class="btn btn-success">Envoyer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>            
+                </div>
+            </div>
         </div>
     </div>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>

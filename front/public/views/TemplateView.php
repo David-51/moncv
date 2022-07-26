@@ -13,7 +13,7 @@
     
     <title><?= $this->getTitle(); ?></title>
 </head>
-<body>
+<body class="vh-100">
     <!-- Defined the navbar here -->
     <?= $this->getNavbar(); ?>
     
@@ -24,7 +24,7 @@
     <?= $this->getBody(); ?>
     
     <!-- Defined the Footer here -->
-    <footer class="bg-primary">
+    <footer class="bg-primary fixed-bottom">
         <?= $this->getFooter(); ?>
     </footer>
 </body>
