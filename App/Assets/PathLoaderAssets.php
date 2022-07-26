@@ -13,7 +13,8 @@ class PathLoader
         'Assets/',
         'Controller/',
         'App/Controller/',
-        'App/Controller/Articles',  
+        'App/Controller/Articles',
+        'App/Controller/Messages',
         'App/Model/Entities',
         'App/Model/Manager',     
         'vendor'

@@ -14,6 +14,9 @@ switch ($_GET['level2']) {
     case 'articles':
         require 'GetArticlesController.php';
         break;
+    case 'messages':
+        require 'MessagesController.php';
+        break;
     default :
         echo json_encode(['message' => 'You must specify a valid route']);
 }

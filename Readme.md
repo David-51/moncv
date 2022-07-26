@@ -12,6 +12,9 @@ So you will find a tiny blog, an admin interface to create articles.
 ## Good to know
 This repository contain Phpdotenv to read .env files.
 You can find the original here : https://github.com/vlucas/phpdotenv
+
+To send mail, i use PhpMailer/PhpMailer
+You can find here : https://github.com/PHPMailer/PHPMailer
 ## Contact me
 you can contact me in Linkedin at :
 
