@@ -21,10 +21,12 @@ $dotenv->load();
 // router
 switch ($_GET['level1']) {
     case 'blog':
-        Logger::setMessage('Blog');
+        Logger::setMessage('Visit Blog');
         require 'BlogController.php';
         break;
     case 'cv':
+        Logger::setMessage('Visit CV');
+        require 'CVController.php';
         break;
     case 'admin':
         break;
